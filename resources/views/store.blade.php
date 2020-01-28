@@ -25,11 +25,11 @@
                 <label>Categoria</label>
                 <select class="form-control" name="category_id">
                     <option>---</option>
-                    {{-- @foreach($post->categories as $category)
+                    @foreach($categories as $category)
 
-                        <option {{ $post->category->id == $category->id ? 'selected' : '' }} value="{{ $category->id }}"></option>
+                        <option value="{{ $category->id }}">{{ $category->title }}</option>
 
-                    @endforeach --}}
+                    @endforeach
                 </select>
             </div>
 
@@ -38,6 +38,17 @@
                 <label>Descrizione</label>
                 <textarea class="form-control" name="description" type="text" placeholder="Inserisci una descrizione">
                 </textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Tags</label>
+                <select class="form-control" name="tags[]" multiple>
+                    @foreach($tags as $tag)
+
+                        <option value="{{ $tag->id }}">{{ $tag->title }}</option>
+
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group">

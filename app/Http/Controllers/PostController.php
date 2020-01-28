@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\Category;
 use App\Tag;
+use App\PostInformation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -28,7 +30,11 @@ class PostController extends Controller
      */
     public function create()
     {
-      return view('store');
+      $data = [
+          'categories' => Category::all(),
+          'tags' => Tag::all()
+      ];
+      return view('store', $data);
     }
 
     /**
@@ -39,10 +45,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // $data = $request->all();
-        // $post->create($data);
-        // $post->postInformation->create($data);
-        // return redirect()->route('posts.index');
+        $data = $request->all();
+        // dd($data);
+        $post  = Post::create($data);
+        $tags = Tag::find($data['tags']);
+        $category = Category::find($data['category_id']);
+        $post -> tags() -> attach($tags);
+        $post -> category() -> associate($category);
+
+        $data['post_id'] = $post->id; //Aggiungo campo mancante che proviene dall'inserimento del post
+        $data['slug'] = Str::slug($post->title);
+        $post = PostInformation::create($data);
+        return redirect()->route('posts.index');
     }
 
     /**
